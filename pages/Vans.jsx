@@ -9,7 +9,7 @@ export default function Vans(){
             .then(data => setVans(data.vans))
     }, [])
 
-    const vanElements = vans.map(van => {
+    const vanElements = vans.map(van => (
         <div key={van.id} className="van-title">
             <img src={van.imageUrl} alt={van.name} />
             <div className="van-info">
@@ -18,7 +18,7 @@ export default function Vans(){
             </div>
             <i className={`van-type ${van.type} selected`}>{van.type}</i>
         </div>
-    })
+    ))
 
     return(
         <div className="van-list-container">
