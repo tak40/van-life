@@ -2,34 +2,41 @@ import React from "react"
 import { Link, useParams } from "react-router-dom"
 
 export default function HostVanDetail() {
-    const [vans, setVans] = React.useState([])
-    const params = useParams()
+    const { id } = useParams()
+    const [currentVan, setCurrentVan] = React.useState(null)
 
     React.useEffect(() => {
-        fetch(`/api/host/vans/${params.id}`)
+        fetch(`/api/host/vans/${id}`)
             .then(res => res.json())
-            .then(data => setVans(data.vans))
-    }, [params.id])
+            .then(data => setCurrentVan(data.vans))
+    }, [])
 
-    const vanElements = vans.map(van => (
-        <section key={van.id}>
-            <div>
-                <img src={van.imageUrl} alt={van.name} />
-            </div>
-            <div>
-                <p>{van.type}</p>
-                <h3>{van.name}</h3>
-                <p>{van.price}<span>day</span></p>
-            </div>
-        </section>
-    ))
+    if (!currentVan) {
+        return <h1>Loading...</h1>
+    }
 
     return (
-        <div>
-            {vanElements}
-            <Link>Details</Link>
-            <Link>Pricing</Link>
-            <Link>Photos</Link>
-        </div>
+        <section>
+            <Link
+                to=".."
+                relative="path"
+                className="back-button"
+            >&larr; <span>Back to all vans</span></Link>
+
+            <div className="host-van-detail-layout-container">
+                <div className="host-van-detail">
+                    <img src={currentVan.imageUrl} />
+                    <div className="host-van-detail-info-text">
+                        <i
+                            className={`van-type van-type-${currentVan.type}`}
+                        >
+                            {currentVan.type}
+                        </i>
+                        <h3>{currentVan.name}</h3>
+                        <h4>${currentVan.price}/day</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
     )
 }
